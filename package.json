@@ -1,0 +1,45 @@
+{
+  "name": "mongodb-visualizer",
+  "version": "0.1.0",
+  "description": "MongoDB Database Visualizer and models relationships between collections",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "peerDependencies": {
+    "mongoose": ">=6",
+    "express": ">=4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hibbanur-Rahman/mongodb-visualizer.git"
+  },
+  "keywords": [],
+  "author": "Hibbanur Rahman",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Hibbanur-Rahman/mongodb-visualizer/issues"
+  },
+  "homepage": "https://github.com/Hibbanur-Rahman/mongodb-visualizer#readme",
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.2.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.1.6"
+  }
+}
