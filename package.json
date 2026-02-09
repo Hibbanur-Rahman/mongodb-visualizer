@@ -1,5 +1,5 @@
 {
-  "name": "@hibbanur-rahman/mongodb-models-visualizer",
+  "name": "mongodb-models-visualizer",
   "version": "0.1.0",
   "description": "MongoDB Database Visualizer and models relationships between collections",
   "main": "dist/index.cjs",
@@ -12,8 +12,8 @@
     }
   },
   "peerDependencies": {
-    "mongoose": ">=6",
-    "express": ">=4"
+    "express": ">=4",
+    "mongoose": ">=6"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -27,7 +27,16 @@
     "type": "git",
     "url": "git+https://github.com/Hibbanur-Rahman/mongodb-visualizer.git"
   },
-  "keywords": ["mongoDB", "visualizer", "models", "relationships", "collections", "express", "mongoose", "hibbanur rahman"],
+  "keywords": [
+    "mongoDB",
+    "visualizer",
+    "models",
+    "relationships",
+    "collections",
+    "express",
+    "mongoose",
+    "hibbanur rahman"
+  ],
   "author": "Hibbanur Rahman",
   "license": "ISC",
   "type": "module",
@@ -42,7 +51,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "express": "^5.2.1",
-    "mongoose": "^9.1.6"
+    "express": ">=4",
+    "mongoose": ">=6"
   }
 }

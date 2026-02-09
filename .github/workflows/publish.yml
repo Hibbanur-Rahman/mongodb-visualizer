@@ -1,22 +1,35 @@
-name: Publish to GitHub Packages
+name: Publish to npm & GitHub Packages
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          registry-url: https://npm.pkg.github.com
 
-      - run: npm install
-      - run: npm publish
+      # Publish to npm
+      - name: Publish to npm
+        run: |
+          npm config set registry https://registry.npmjs.org/
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Publish to GitHub Packages
+      - name: Publish to GitHub Packages
+        run: |
+          npm pkg set name="@hibbanur-rahman/mongodb-models-visualizer"
+          npm config set registry https://npm.pkg.github.com
+          npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
