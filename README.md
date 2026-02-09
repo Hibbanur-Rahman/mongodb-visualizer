@@ -4,7 +4,7 @@
 ![license](https://img.shields.io/npm/l/mongodb-models-visualizer)
 ![node](https://img.shields.io/node/v/mongodb-models-visualizer)
 ![typescript](https://img.shields.io/badge/TypeScript-Ready-blue)
-![GitHub stars](https://img.shields.io/github/stars/your-username/mongodb-visualizer?style=social)
+![GitHub stars](https://img.shields.io/github/stars/hibbanur-rahman/mongodb-visualizer?style=social)
 
 # mongodb-visualizer
 
