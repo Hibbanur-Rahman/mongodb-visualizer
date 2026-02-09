@@ -2,9 +2,13 @@ name: Publish to npm & GitHub Packages
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
   workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # Required for npm provenance
 
 jobs:
   publish:
@@ -15,21 +19,30 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
 
-      # Publish to npm
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
       - name: Publish to npm
-        run: |
-          npm config set registry https://registry.npmjs.org/
-          npm publish
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # Publish to GitHub Packages
+      - name: Configure for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@hibbanur-rahman'
+
       - name: Publish to GitHub Packages
         run: |
           npm pkg set name="@hibbanur-rahman/mongodb-models-visualizer"
-          npm config set registry https://npm.pkg.github.com
-          npm publish
+          npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.HUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
