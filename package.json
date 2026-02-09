@@ -18,7 +18,9 @@
   "scripts": {
     "test": "echo \"Warning: No tests specified\"",
     "build": "tsup",
-    "prepublishOnly": "npm run build"
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "repository": {
     "type": "git",
@@ -42,10 +44,14 @@
   },
   "homepage": "https://github.com/Hibbanur-Rahman/mongodb-visualizer#readme",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/express": "^5.0.6",
     "@types/node": "^25.2.2",
+    "eslint": "^9.39.2",
+    "globals": "^17.3.0",
     "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.54.0"
   },
   "dependencies": {
     "express": ">=4",
