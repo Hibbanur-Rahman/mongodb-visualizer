@@ -1,3 +1,11 @@
+
+![npm](https://img.shields.io/npm/v/mongodb-models-visualizer)
+![npm downloads](https://img.shields.io/npm/dw/mongodb-models-visualizer)
+![license](https://img.shields.io/npm/l/mongodb-models-visualizer)
+![node](https://img.shields.io/node/v/mongodb-models-visualizer)
+![typescript](https://img.shields.io/badge/TypeScript-Ready-blue)
+![GitHub stars](https://img.shields.io/github/stars/your-username/mongodb-visualizer?style=social)
+
 # mongodb-visualizer
 
 🚀 **Swagger-like Analyzer for MongoDB (Mongoose) Models**

@@ -1,4 +1,4 @@
-# Contributing to mongodb-models-analyzer
+# Contributing to mongodb-models-visualizer
 
 First of all, thank you for considering contributing 🙌  
 Contributions of all kinds are welcome — code, docs, ideas, or bug reports.
@@ -31,8 +31,8 @@ Click the **Fork** button on GitHub.
 
 ### 2️⃣ Clone Your Fork
 ```bash
-git clone https://github.com/<your-username>/mongodb-models-analyzer.git
-cd mongodb-models-analyzer
+git clone https://github.com/<your-username>/mongodb-visualizer.git
+cd mongodb-visualizer
 ```
 
 ### 3️⃣ Install Dependencies
@@ -69,7 +69,7 @@ npm link
 In your test Express app:
 
 ```bash
-npm link mongodb-models-analyzer
+npm link mongodb-models-visualizer
 ```
 
 ---
