@@ -1,5 +1,5 @@
 {
-  "name": "@hibbanur-rahman/mongodb-model-analyzer",
+  "name": "@hibbanur-rahman/mongodb-models-visualizer",
   "version": "0.1.0",
   "description": "MongoDB Database Visualizer and models relationships between collections",
   "main": "dist/index.cjs",
