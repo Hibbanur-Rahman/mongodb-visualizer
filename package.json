@@ -1,5 +1,5 @@
 {
-  "name": "mongodb-models-visualizer",
+  "name": "@hibbanur-rahman/mongodb-model-analyzer",
   "version": "0.1.0",
   "description": "MongoDB Database Visualizer and models relationships between collections",
   "main": "dist/index.cjs",
@@ -19,6 +19,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup",
     "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",
