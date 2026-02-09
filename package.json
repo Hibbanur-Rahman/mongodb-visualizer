@@ -20,9 +20,6 @@
     "build": "tsup",
     "prepublishOnly": "npm run build"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Hibbanur-Rahman/mongodb-visualizer.git"
