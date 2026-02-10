@@ -1,17 +1,37 @@
 import express from 'express'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import { scanModels } from '../core/scanModels'
 import { parseSchema } from '../core/parseSchema'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 
 export function modelAnalyzer(options: {
   mongoose: any
   path?: string
   title?: string
 }) {
+  // Compute __dirname inside the function to avoid ESM/CJS conflicts
+  const getUiDistPath = () => {
+    try {
+      // In CJS, __dirname is available
+      if (typeof __dirname !== 'undefined') {
+        return path.join(__dirname, '../../ui/dist')
+      }
+    } catch {
+      // Ignore and try ESM method
+    }
+
+    // In ESM, use import.meta.url
+    try {
+      const moduleDir = path.dirname(new URL(import.meta.url).pathname)
+      return path.join(moduleDir, '../../ui/dist')
+    } catch {
+      // Ignore and fallback
+    }
+
+    // Fallback
+    return path.join(process.cwd(), 'node_modules/mongodb-models-visualizer/ui/dist')
+  }
+
+  const uiDistPath = getUiDistPath()
   const router = express.Router()
   const basePath = options.path || '/mongodb-visualizer'
   const title = options.title || 'MongoDB Model Visualizer'
@@ -25,15 +45,15 @@ export function modelAnalyzer(options: {
         fields: parseSchema(m.schema)
       }))
 
-      res.json({ 
+      res.json({
         success: true,
         data: models,
-        title: title 
+        title: title
       })
     } catch (error: any) {
-      res.status(500).json({ 
-        success: false, 
-        error: error.message 
+      res.status(500).json({
+        success: false,
+        error: error.message
       })
     }
   })
@@ -43,11 +63,11 @@ export function modelAnalyzer(options: {
     try {
       const { modelName } = req.params
       const model = options.mongoose.model(modelName)
-      
+
       if (!model) {
-        return res.status(404).json({ 
-          success: false, 
-          error: 'Model not found' 
+        return res.status(404).json({
+          success: false,
+          error: 'Model not found'
         })
       }
 
@@ -60,17 +80,16 @@ export function modelAnalyzer(options: {
         }
       })
     } catch (error: any) {
-      res.status(500).json({ 
-        success: false, 
-        error: error.message 
+      res.status(500).json({
+        success: false,
+        error: error.message
       })
     }
   })
 
   // Serve the React UI
-  const uiDistPath = path.join(__dirname, '../../ui/dist')
   router.use('/assets', express.static(path.join(uiDistPath, 'assets')))
-  
+
   router.get('/', (req, res) => {
     res.sendFile(path.join(uiDistPath, 'index.html'))
   })

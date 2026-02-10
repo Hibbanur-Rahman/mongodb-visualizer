@@ -37,7 +37,6 @@ module.exports = __toCommonJS(index_exports);
 // src/express/middleware.ts
 var import_express = __toESM(require("express"), 1);
 var import_path = __toESM(require("path"), 1);
-var import_url = require("url");
 
 // src/core/scanModels.ts
 var import_mongoose = require("mongoose");
@@ -88,9 +87,22 @@ function parseSchema(schema) {
 
 // src/express/middleware.ts
 var import_meta = {};
-var __filename = (0, import_url.fileURLToPath)(import_meta.url);
-var __dirname = import_path.default.dirname(__filename);
 function modelAnalyzer(options) {
+  const getUiDistPath = () => {
+    try {
+      if (typeof __dirname !== "undefined") {
+        return import_path.default.join(__dirname, "../../ui/dist");
+      }
+    } catch {
+    }
+    try {
+      const moduleDir = import_path.default.dirname(new URL(import_meta.url).pathname);
+      return import_path.default.join(moduleDir, "../../ui/dist");
+    } catch {
+    }
+    return import_path.default.join(process.cwd(), "node_modules/mongodb-models-visualizer/ui/dist");
+  };
+  const uiDistPath = getUiDistPath();
   const router = import_express.default.Router();
   const basePath = options.path || "/mongodb-visualizer";
   const title = options.title || "MongoDB Model Visualizer";
@@ -138,7 +150,6 @@ function modelAnalyzer(options) {
       });
     }
   });
-  const uiDistPath = import_path.default.join(__dirname, "../../ui/dist");
   router.use("/assets", import_express.default.static(import_path.default.join(uiDistPath, "assets")));
   router.get("/", (req, res) => {
     res.sendFile(import_path.default.join(uiDistPath, "index.html"));
