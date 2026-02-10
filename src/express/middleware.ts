@@ -1,10 +1,11 @@
 import express from 'express'
 import path from 'path'
+import type { Mongoose } from 'mongoose'
 import { scanModels } from '../core/scanModels'
 import { parseSchema } from '../core/parseSchema'
 
 export function modelAnalyzer(options: {
-  mongoose: any
+  mongoose: Mongoose
   path?: string
   title?: string
 }) {
@@ -33,7 +34,6 @@ export function modelAnalyzer(options: {
 
   const uiDistPath = getUiDistPath()
   const router = express.Router()
-  const basePath = options.path || '/mongodb-visualizer'
   const title = options.title || 'MongoDB Model Visualizer'
 
   // API endpoint to get all models
@@ -50,10 +50,10 @@ export function modelAnalyzer(options: {
         data: models,
         title: title
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : 'An error occurred'
       })
     }
   })
@@ -79,10 +79,10 @@ export function modelAnalyzer(options: {
           fields: parseSchema(model.schema)
         }
       })
-    } catch (error: any) {
+    } catch (error: unknown) {
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : 'An error occurred'
       })
     }
   })

@@ -63,7 +63,7 @@ function parseSchema(schema) {
       unique: !!type.options?.unique,
       index: !!type.options?.index,
       default: type.options?.default,
-      enum: type.enumValues || [],
+      enum: type.options?.enum || [],
       ref: type.options?.ref,
       min: type.options?.min,
       max: type.options?.max,
@@ -104,7 +104,6 @@ function modelAnalyzer(options) {
   };
   const uiDistPath = getUiDistPath();
   const router = import_express.default.Router();
-  const basePath = options.path || "/mongodb-visualizer";
   const title = options.title || "MongoDB Model Visualizer";
   router.get("/api/models", (req, res) => {
     try {
@@ -121,7 +120,7 @@ function modelAnalyzer(options) {
     } catch (error) {
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : "An error occurred"
       });
     }
   });
@@ -146,7 +145,7 @@ function modelAnalyzer(options) {
     } catch (error) {
       res.status(500).json({
         success: false,
-        error: error.message
+        error: error instanceof Error ? error.message : "An error occurred"
       });
     }
   });
