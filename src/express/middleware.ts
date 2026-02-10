@@ -70,10 +70,11 @@ export function modelAnalyzer(options: {
     }
   })
 
-  // Serve the React UI
-  router.use('/assets', express.static(path.join(uiDistPath, 'assets')))
+  // Serve all static files from the dist folder
+  router.use(express.static(uiDistPath))
 
-  router.get('/', (req, res) => {
+  // Catch-all route to serve index.html for any non-API routes
+  router.get('*', (req, res) => {
     res.sendFile(path.join(uiDistPath, 'index.html'))
   })
 

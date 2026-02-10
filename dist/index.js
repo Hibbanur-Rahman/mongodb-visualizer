@@ -52,7 +52,7 @@ function parseSchema(schema) {
 // src/express/middleware.ts
 function modelAnalyzer(options) {
   const getUiDistPath = () => {
-    return path.join(process.cwd(), "node_modules/mongodb-models-visualizer/ui/dist");
+    return path.join(process.cwd(), "node_modules/mongodb-models-visualizer/src/ui/dist");
   };
   const uiDistPath = getUiDistPath();
   const router = express.Router();
@@ -101,8 +101,8 @@ function modelAnalyzer(options) {
       });
     }
   });
-  router.use("/assets", express.static(path.join(uiDistPath, "assets")));
-  router.get("/", (req, res) => {
+  router.use(express.static(uiDistPath));
+  router.get("*", (req, res) => {
     res.sendFile(path.join(uiDistPath, "index.html"));
   });
   return router;

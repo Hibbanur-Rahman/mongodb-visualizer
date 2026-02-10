@@ -88,7 +88,7 @@ function parseSchema(schema) {
 // src/express/middleware.ts
 function modelAnalyzer(options) {
   const getUiDistPath = () => {
-    return import_path.default.join(process.cwd(), "node_modules/mongodb-models-visualizer/ui/dist");
+    return import_path.default.join(process.cwd(), "node_modules/mongodb-models-visualizer/src/ui/dist");
   };
   const uiDistPath = getUiDistPath();
   const router = import_express.default.Router();
@@ -137,8 +137,8 @@ function modelAnalyzer(options) {
       });
     }
   });
-  router.use("/assets", import_express.default.static(import_path.default.join(uiDistPath, "assets")));
-  router.get("/", (req, res) => {
+  router.use(import_express.default.static(uiDistPath));
+  router.get("*", (req, res) => {
     res.sendFile(import_path.default.join(uiDistPath, "index.html"));
   });
   return router;
