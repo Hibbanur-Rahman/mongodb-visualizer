@@ -52,22 +52,11 @@ function parseSchema(schema) {
 // src/express/middleware.ts
 function modelAnalyzer(options) {
   const getUiDistPath = () => {
-    try {
-      if (typeof __dirname !== "undefined") {
-        return path.join(__dirname, "../../ui/dist");
-      }
-    } catch {
-    }
-    try {
-      const moduleDir = path.dirname(new URL(import.meta.url).pathname);
-      return path.join(moduleDir, "../../ui/dist");
-    } catch {
-    }
     return path.join(process.cwd(), "node_modules/mongodb-models-visualizer/ui/dist");
   };
   const uiDistPath = getUiDistPath();
   const router = express.Router();
-  const title = options.title || "MongoDB Model Visualizer";
+  const title = options?.title || "MongoDB Model Visualizer";
   router.get("/api/models", (req, res) => {
     try {
       const models = scanModels(options.mongoose).map((m) => ({

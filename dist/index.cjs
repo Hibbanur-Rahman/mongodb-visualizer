@@ -86,25 +86,13 @@ function parseSchema(schema) {
 }
 
 // src/express/middleware.ts
-var import_meta = {};
 function modelAnalyzer(options) {
   const getUiDistPath = () => {
-    try {
-      if (typeof __dirname !== "undefined") {
-        return import_path.default.join(__dirname, "../../ui/dist");
-      }
-    } catch {
-    }
-    try {
-      const moduleDir = import_path.default.dirname(new URL(import_meta.url).pathname);
-      return import_path.default.join(moduleDir, "../../ui/dist");
-    } catch {
-    }
     return import_path.default.join(process.cwd(), "node_modules/mongodb-models-visualizer/ui/dist");
   };
   const uiDistPath = getUiDistPath();
   const router = import_express.default.Router();
-  const title = options.title || "MongoDB Model Visualizer";
+  const title = options?.title || "MongoDB Model Visualizer";
   router.get("/api/models", (req, res) => {
     try {
       const models = scanModels(options.mongoose).map((m) => ({
