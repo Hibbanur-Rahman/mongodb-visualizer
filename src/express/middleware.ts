@@ -12,7 +12,7 @@ export function modelAnalyzer(options: {
   // Compute __dirname inside the function to avoid ESM/CJS conflicts
   const getUiDistPath = () => {
     // Fallback
-    return path.join(process.cwd(), 'node_modules/mongodb-models-visualizer/ui/dist')
+    return path.join(process.cwd(), 'node_modules/mongodb-models-visualizer/src/ui/dist')
   }
 
   const uiDistPath = getUiDistPath()
