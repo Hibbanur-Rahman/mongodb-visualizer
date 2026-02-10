@@ -11,30 +11,13 @@ export function modelAnalyzer(options: {
 }) {
   // Compute __dirname inside the function to avoid ESM/CJS conflicts
   const getUiDistPath = () => {
-    try {
-      // In CJS, __dirname is available
-      if (typeof __dirname !== 'undefined') {
-        return path.join(__dirname, '../../ui/dist')
-      }
-    } catch {
-      // Ignore and try ESM method
-    }
-
-    // In ESM, use import.meta.url
-    try {
-      const moduleDir = path.dirname(new URL(import.meta.url).pathname)
-      return path.join(moduleDir, '../../ui/dist')
-    } catch {
-      // Ignore and fallback
-    }
-
     // Fallback
     return path.join(process.cwd(), 'node_modules/mongodb-models-visualizer/ui/dist')
   }
 
   const uiDistPath = getUiDistPath()
   const router = express.Router()
-  const title = options.title || 'MongoDB Model Visualizer'
+  const title = options?.title || 'MongoDB Model Visualizer'
 
   // API endpoint to get all models
   router.get('/api/models', (req, res) => {
