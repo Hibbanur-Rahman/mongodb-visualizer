@@ -36,6 +36,8 @@ module.exports = __toCommonJS(index_exports);
 
 // src/express/middleware.ts
 var import_express = __toESM(require("express"), 1);
+var import_path = __toESM(require("path"), 1);
+var import_url = require("url");
 
 // src/core/scanModels.ts
 var import_mongoose = require("mongoose");
@@ -54,28 +56,92 @@ function scanModels(mongoose) {
 var import_mongoose2 = require("mongoose");
 function parseSchema(schema) {
   const fields = [];
-  schema.eachPath((path, type) => {
-    fields.push({
-      name: path,
-      instance: type.instance,
+  schema.eachPath((path2, type) => {
+    const fieldInfo = {
+      name: path2,
+      type: type.instance || "Mixed",
       required: !!type.isRequired,
+      unique: !!type.options?.unique,
+      index: !!type.options?.index,
+      default: type.options?.default,
       enum: type.enumValues || [],
-      ref: type.options?.ref
+      ref: type.options?.ref,
+      min: type.options?.min,
+      max: type.options?.max,
+      minlength: type.options?.minlength,
+      maxlength: type.options?.maxlength,
+      match: type.options?.match?.toString(),
+      lowercase: type.options?.lowercase,
+      uppercase: type.options?.uppercase,
+      trim: type.options?.trim,
+      isArray: Array.isArray(type.options?.type)
+    };
+    Object.keys(fieldInfo).forEach((key) => {
+      if (fieldInfo[key] === void 0) {
+        delete fieldInfo[key];
+      }
     });
+    fields.push(fieldInfo);
   });
   return fields;
 }
 
 // src/express/middleware.ts
+var import_meta = {};
+var __filename = (0, import_url.fileURLToPath)(import_meta.url);
+var __dirname = import_path.default.dirname(__filename);
 function modelAnalyzer(options) {
   const router = import_express.default.Router();
+  const basePath = options.path || "/mongodb-visualizer";
+  const title = options.title || "MongoDB Model Visualizer";
   router.get("/api/models", (req, res) => {
-    const models = scanModels(options.mongoose).map((m) => ({
-      name: m.name,
-      collection: m.collection,
-      fields: parseSchema(m.schema)
-    }));
-    res.json(models);
+    try {
+      const models = scanModels(options.mongoose).map((m) => ({
+        name: m.name,
+        collection: m.collection,
+        fields: parseSchema(m.schema)
+      }));
+      res.json({
+        success: true,
+        data: models,
+        title
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  router.get("/api/models/:modelName", (req, res) => {
+    try {
+      const { modelName } = req.params;
+      const model = options.mongoose.model(modelName);
+      if (!model) {
+        return res.status(404).json({
+          success: false,
+          error: "Model not found"
+        });
+      }
+      res.json({
+        success: true,
+        data: {
+          name: modelName,
+          collection: model.collection.name,
+          fields: parseSchema(model.schema)
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  });
+  const uiDistPath = import_path.default.join(__dirname, "../../ui/dist");
+  router.use("/assets", import_express.default.static(import_path.default.join(uiDistPath, "assets")));
+  router.get("/", (req, res) => {
+    res.sendFile(import_path.default.join(uiDistPath, "index.html"));
   });
   return router;
 }
