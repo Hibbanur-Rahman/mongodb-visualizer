@@ -73,8 +73,8 @@ export function modelAnalyzer(options: {
   // Serve all static files from the dist folder
   router.use(express.static(uiDistPath))
 
-  // Catch-all route to serve index.html for any non-API routes
-  router.get('*', (req, res) => {
+  // Serve index.html for the root route
+  router.get('/', (req, res) => {
     res.sendFile(path.join(uiDistPath, 'index.html'))
   })
 

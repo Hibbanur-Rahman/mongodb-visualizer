@@ -102,7 +102,7 @@ function modelAnalyzer(options) {
     }
   });
   router.use(express.static(uiDistPath));
-  router.get("*", (req, res) => {
+  router.get("/", (req, res) => {
     res.sendFile(path.join(uiDistPath, "index.html"));
   });
   return router;

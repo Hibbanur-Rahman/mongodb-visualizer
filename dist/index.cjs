@@ -138,7 +138,7 @@ function modelAnalyzer(options) {
     }
   });
   router.use(import_express.default.static(uiDistPath));
-  router.get("*", (req, res) => {
+  router.get("/", (req, res) => {
     res.sendFile(import_path.default.join(uiDistPath, "index.html"));
   });
   return router;
