@@ -137,7 +137,7 @@ modelAnalyzer({
 | sampleDocs | Boolean | Include sample documents |
 | auth | Boolean | Enable auth middleware |
 
-## ## 🔐 Security (Recommended for Production)
+## 🔐 Security (Recommended for Production)
 
 Do NOT expose this endpoint publicly without authentication.
 
