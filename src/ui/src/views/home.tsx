@@ -1,12 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader } from "@/components/ui/card";
 import ModelService from "@/services/models.service";
-import { useEffect } from "react";
+import type { Model } from "@/types/models.types";
+import { useEffect, useState } from "react";
 
 const Home = () => {
+  const [models,setModels]=useState<Model[]>([]);
   const handleGetModels = async () => {
     try {
       const response = await ModelService.GetAllModels();
       console.log("models", response.data);
+      if(response?.status===200){
+        setModels(response?.data?.data);
+      }
     } catch (error) {
       console.log("error", error);
     }
@@ -21,7 +26,22 @@ const Home = () => {
       <p className="text-lg text-gray-600">
         Visualize your MongoDB data with ease.
       </p>
-      <Button>Get Started</Button>
+      <div className="mt-4">
+        {models.map((model, index) => (
+          <Card key={index} className="w-96 mb-4 cursor-pointer">
+            <CardHeader>
+              <h2 className="text-2xl font-semibold">{model?.name}</h2>
+            </CardHeader>
+            <CardDescription>
+              <p className="text-sm text-gray-500">
+                Collection: {model?.collection}
+              </p>
+
+            </CardDescription>
+          </Card>
+        ))}
+      </div>
+
     </div>
   );
 };
