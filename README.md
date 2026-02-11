@@ -210,11 +210,3 @@ MIT License © 2026
 - Inspired by Swagger & Prisma Studio
 
 ---
-
-**Next steps you can take:**
-- Add npm badges
-- Write a CONTRIBUTING.md
-- Create a docs website
-- Prepare a demo GIF
-
-Let me know what's next! 🚀
