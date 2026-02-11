@@ -6,7 +6,7 @@
 ![typescript](https://img.shields.io/badge/TypeScript-Ready-blue)
 ![GitHub stars](https://img.shields.io/github/stars/hibbanur-rahman/mongodb-visualizer?style=social)
 
-# mongodb-visualizer
+# mongodb-models-visualizer
 
 🚀 **Swagger-like Analyzer for MongoDB (Mongoose) Models**
 
@@ -14,9 +14,9 @@ Automatically analyze, visualize, and document your MongoDB models in a Node.js 
 
 ---
 
-## ✨ What is mongodb-visualizer?
+## ✨ What is mongodb-models-visualizer?
 
-`mongodb-visualizer` is a developer tool that introspects your **Mongoose models** and provides:
+`mongodb-models-visualizer` is a developer tool that introspects your **Mongoose models** and provides:
 
 - List of all registered models
 - Schema fields with types & validations
@@ -41,13 +41,13 @@ Think of it as **Swagger, but for MongoDB schemas**.
 ## 📦 Installation
 
 ```bash
-npm install mongodb-visualizer
+npm install mongodb-models-visualizer
 ```
 
 or
 
 ```bash
-yarn add mongodb-visualizer
+yarn add mongodb-models-visualizer
 ```
 
 ## 🚀 Quick Start
@@ -57,7 +57,7 @@ yarn add mongodb-visualizer
 ```javascript
 import express from 'express'
 import mongoose from 'mongoose'
-import { modelAnalyzer } from 'mongodb-visualizer'
+import { modelAnalyzer } from 'mongodb-models-visualizer'
 
 const app = express()
 
