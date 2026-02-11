@@ -42,7 +42,7 @@
     "hibbanur rahman"
   ],
   "author": "Hibbanur Rahman",
-  "license": "ISC",
+  "license": "MIT",
   "type": "module",
   "bugs": {
     "url": "https://github.com/Hibbanur-Rahman/mongodb-visualizer/issues"
