@@ -13,7 +13,9 @@ const Request = async (httpOptions:{
 
   const token = localStorage.getItem("access_token");
   if (!httpOptions.exact) {
-    httpOptions.url = import.meta.env.VITE_API_URL+"/" + httpOptions.url;
+    const basename = localStorage.getItem('basename') || '';
+    console.log("basename from localStorage:", basename);
+    httpOptions.url = basename+"/" + import.meta.env.VITE_API_URL+"/" + httpOptions.url;
     console.log("http header:",httpOptions);
   }
   httpOptions.headers = {

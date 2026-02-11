@@ -11,5 +11,7 @@ export interface Model{
         default?: unknown;
         enum?: (string | number | boolean)[];
         isArray?: boolean;
+        min?: number;
+        max?: number;
     }[];
 }
