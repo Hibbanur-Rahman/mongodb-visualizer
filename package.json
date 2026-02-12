@@ -5,6 +5,11 @@
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -17,15 +22,16 @@
   },
   "scripts": {
     "build:ui": "cd src/ui && npm run build",
+    "build:main": "tsup",
+    "build:all": "npm run build:main && npm run build:ui",
     "dev:ui": "cd src/ui && npm run dev",
     "dev:server": "nodemon src/server/index.js",
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:ui\"",
-    "prepare": "npm run build:ui",
     "test": "echo \"Warning: No tests specified\"",
     "build": "tsup",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run build:all"
   },
   "repository": {
     "type": "git",

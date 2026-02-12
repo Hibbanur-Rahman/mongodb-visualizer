@@ -52,7 +52,7 @@ function parseSchema(schema) {
 // src/express/middleware.ts
 function modelAnalyzer(options) {
   const getUiDistPath = () => {
-    return path.join(process.cwd(), "node_modules/mongodb-models-visualizer/src/ui/dist");
+    return path.join(process.cwd(), "node_modules/mongodb-models-visualizer/dist/ui");
   };
   const uiDistPath = getUiDistPath();
   const router = express.Router();
