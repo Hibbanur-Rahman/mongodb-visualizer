@@ -15,3 +15,16 @@ export interface Model{
         max?: number;
     }[];
 }
+
+export interface ModelDataResponse {
+    success: boolean;
+    data: {
+        records: Array<Record<string, unknown>>;
+        pagination: {
+            total: number;
+            limit: number;
+            skip: number;
+            hasMore: boolean;
+        };
+    };
+}

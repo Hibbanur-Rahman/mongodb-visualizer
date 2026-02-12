@@ -87,6 +87,21 @@ app.listen(3000, () => {
 
 Navigate to `http://localhost:3000/models-analyzer`
 
+---
+
+## 📸 Screenshots
+
+### Models Overview
+![Models List](examples/images/image-1.png)
+
+### Model Details & Schema
+![Model Schema](examples/images/image-2.png)
+
+### Field Analysis
+![Field Details](examples/images/image-3.png)
+
+---
+
 ## 📊 API Endpoints
 
 ### 🔹 Get all models

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, Database, Key, Hash } from "lucide-react";
+import { ArrowLeft, Search, Database, Key, Hash, Table as TableIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import ModelService from "@/services/models.service";
-import type { Model } from "@/types/models.types";
+import type { Model, ModelDataResponse } from "@/types/models.types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,8 +21,17 @@ const ModelDetail = () => {
   const [model, setModel] = useState<Model | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [dataRecords, setDataRecords] = useState<Array<Record<string, unknown>>>([]);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    limit: 50,
+    skip: 0,
+    hasMore: false,
+  });
+  const [activeTab, setActiveTab] = useState<"schema" | "data">("schema");
 
-  const fetchModelDetails = async () => {
+  const fetchModelDetails = useCallback(async () => {
     try {
       setLoading(true);
       const response = await ModelService.GetAllModels();
@@ -37,18 +46,66 @@ const ModelDetail = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [modelName]);
+
+  const fetchModelData = useCallback(async (skip = 0) => {
+    if (!modelName) return;
+
+    try {
+      setDataLoading(true);
+      const response = await ModelService.GetModelData(modelName, {
+        limit: pagination.limit,
+        skip,
+        sort: '-_id'
+      });
+
+      if (response?.status === 200) {
+        const data: ModelDataResponse = response.data;
+        setDataRecords(data.data.records);
+        setPagination(data.data.pagination);
+      }
+    } catch (error) {
+      console.error("Error fetching model data:", error);
+    } finally {
+      setDataLoading(false);
+    }
+  }, [modelName, pagination.limit]);
 
   useEffect(() => {
     fetchModelDetails();
-  }, [modelName]);
+  }, [fetchModelDetails]);
+
+  useEffect(() => {
+    if (activeTab === "data") {
+      fetchModelData();
+    }
+  }, [activeTab, fetchModelData]);
 
   const filteredFields = model?.fields.filter((field) =>
     field.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const getTypeColor = (type: string) => {
-    const colorMap: Record<string, string> = {
+  const handleNextPage = () => {
+    const newSkip = pagination.skip + pagination.limit;
+    fetchModelData(newSkip);
+  };
+
+  const handlePrevPage = () => {
+    const newSkip = Math.max(0, pagination.skip - pagination.limit);
+    fetchModelData(newSkip);
+  };
+
+  const formatValue = (value: unknown): string => {
+    if (value === null || value === undefined) return "-";
+    if (typeof value === "object") {
+      if (value instanceof Date) return new Date(value).toLocaleString();
+      return JSON.stringify(value, null, 2);
+    }
+    return String(value);
+  };
+
+  const getTypeColor = (type: string): "info" | "success" | "warning" | "secondary" | "destructive" | "default" | "outline" => {
+    const colorMap: Record<string, "info" | "success" | "warning" | "secondary" | "destructive" | "default" | "outline"> = {
       String: "info",
       Number: "success",
       Boolean: "warning",
@@ -141,21 +198,54 @@ const ModelDetail = () => {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search fields..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white"
-            />
-          </div>
+        {/* Tab Switcher */}
+        <div className="flex gap-4 mb-6 border-b bg-white rounded-t-lg px-6">
+          <button
+            onClick={() => setActiveTab("schema")}
+            className={`py-4 px-6 font-semibold border-b-2 transition-colors ${
+              activeTab === "schema"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <Database className="h-4 w-4" />
+              Schema Structure
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab("data")}
+            className={`py-4 px-6 font-semibold border-b-2 transition-colors ${
+              activeTab === "data"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <TableIcon className="h-4 w-4" />
+              Collection Data
+            </div>
+          </button>
         </div>
 
-        {/* Fields Table */}
+        {/* Search */}
+        {activeTab === "schema" && (
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="text"
+                placeholder="Search fields..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-white"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Schema Fields Table */}
+        {activeTab === "schema" && (
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b bg-gray-50">
             <h2 className="text-lg font-semibold text-gray-800">Schema Fields</h2>
@@ -179,7 +269,7 @@ const ModelDetail = () => {
                       {field.name}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getTypeColor(field.type) as any}>
+                      <Badge variant={getTypeColor(field.type)}>
                         {field.type}
                         {field.isArray && "[]"}
                       </Badge>
@@ -253,6 +343,107 @@ const ModelDetail = () => {
             </TableBody>
           </Table>
         </div>
+        )}
+
+        {/* Collection Data View */}
+        {activeTab === "data" && (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Collection Data
+                <span className="text-sm font-normal text-gray-600 ml-3">
+                  ({pagination.total} total records)
+                </span>
+              </h2>
+              <Button
+                onClick={() => fetchModelData(pagination.skip)}
+                disabled={dataLoading}
+                variant="outline"
+                size="sm"
+              >
+                {dataLoading ? "Loading..." : "Refresh"}
+              </Button>
+            </div>
+
+            {dataLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                  <p className="mt-4 text-gray-600">Loading data...</p>
+                </div>
+              </div>
+            ) : dataRecords.length === 0 ? (
+              <div className="text-center py-12">
+                <TableIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-500">No records found in this collection</p>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-gray-50">
+                        {Object.keys(dataRecords[0] || {}).map((key) => (
+                          <TableHead key={key} className="font-bold min-w-[150px]">
+                            {key}
+                          </TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {dataRecords.map((record, index) => (
+                        <TableRow key={index} className="hover:bg-gray-50">
+                          {Object.entries(record).map(([key, value]) => (
+                            <TableCell key={key} className="max-w-xs">
+                              <div className="truncate" title={formatValue(value)}>
+                                {typeof value === "object" && value !== null ? (
+                                  <code className="text-xs bg-gray-100 px-2 py-1 rounded block overflow-auto max-h-20">
+                                    {formatValue(value)}
+                                  </code>
+                                ) : (
+                                  <span className="text-sm">{formatValue(value)}</span>
+                                )}
+                              </div>
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Pagination Controls */}
+                <div className="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
+                  <div className="text-sm text-gray-600">
+                    Showing {pagination.skip + 1} to{" "}
+                    {Math.min(pagination.skip + pagination.limit, pagination.total)} of{" "}
+                    {pagination.total} records
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handlePrevPage}
+                      disabled={pagination.skip === 0 || dataLoading}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <ChevronLeft className="h-4 w-4 mr-1" />
+                      Previous
+                    </Button>
+                    <Button
+                      onClick={handleNextPage}
+                      disabled={!pagination.hasMore || dataLoading}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4 ml-1" />
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

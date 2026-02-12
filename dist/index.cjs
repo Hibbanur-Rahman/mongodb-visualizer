@@ -137,6 +137,40 @@ function modelAnalyzer(options) {
       });
     }
   });
+  router.get("/api/models/:modelName/data", async (req, res) => {
+    try {
+      const { modelName } = req.params;
+      const { limit = 50, skip = 0, sort = "-_id" } = req.query;
+      const model = options.mongoose.model(modelName);
+      if (!model) {
+        return res.status(404).json({
+          success: false,
+          error: "Model not found"
+        });
+      }
+      const limitNum = Math.min(Number(limit) || 50, 100);
+      const skipNum = Number(skip) || 0;
+      const data = await model.find().limit(limitNum).skip(skipNum).sort(sort).lean().exec();
+      const totalCount = await model.countDocuments().exec();
+      res.json({
+        success: true,
+        data: {
+          records: data,
+          pagination: {
+            total: totalCount,
+            limit: limitNum,
+            skip: skipNum,
+            hasMore: skipNum + limitNum < totalCount
+          }
+        }
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: error instanceof Error ? error.message : "An error occurred"
+      });
+    }
+  });
   router.use(import_express.default.static(uiDistPath));
   router.get("/", (req, res) => {
     res.sendFile(import_path.default.join(uiDistPath, "index.html"));
