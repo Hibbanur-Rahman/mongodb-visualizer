@@ -118,9 +118,9 @@ const ModelDetail = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-full py-20">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading model details...</p>
         </div>
       </div>
@@ -129,7 +129,7 @@ const ModelDetail = () => {
 
   if (!model) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center h-full py-20">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Model not found</h2>
         <Button onClick={() => navigate("/")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -140,57 +140,68 @@ const ModelDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-[#001E2B] text-white shadow-lg">
-        <div className="container mx-auto px-6 py-4">
+    <div className="h-full">
+      {/* Page Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               onClick={() => navigate("/")}
-              className="text-white hover:bg-white/10"
+              className="text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+              size="sm"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-4 w-4" />
             </Button>
-            <Database className="h-6 w-6" />
-            <div>
-              <h1 className="text-2xl font-bold">{model.name}</h1>
-              <p className="text-sm text-gray-300">Collection: {model.collection}</p>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Database className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{model.name}</h1>
+                <p className="text-sm text-gray-600">Collection: <span className="font-mono font-medium">{model.collection}</span></p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="container mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-8 py-8">
         {/* Stats Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
             <div className="flex items-center gap-3">
-              <Hash className="h-8 w-8 text-blue-500" />
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <Hash className="h-6 w-6 text-blue-600" />
+              </div>
               <div>
-                <p className="text-sm text-gray-600">Total Fields</p>
-                <p className="text-2xl font-bold">{model.fields.length}</p>
+                <p className="text-sm text-gray-600 font-medium">Total Fields</p>
+                <p className="text-3xl font-bold text-gray-900">{model.fields.length}</p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border-l-4 border-green-500">
+          <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
             <div className="flex items-center gap-3">
-              <Key className="h-8 w-8 text-green-500" />
+              <div className="p-3 bg-green-50 rounded-lg">
+                <Key className="h-6 w-6 text-green-600" />
+              </div>
               <div>
-                <p className="text-sm text-gray-600">Required Fields</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm text-gray-600 font-medium">Required Fields</p>
+                <p className="text-3xl font-bold text-gray-900">
                   {model.fields.filter((f) => f.required).length}
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500">
+          <div className="bg-white rounded-lg border-2 border-gray-200 p-6">
             <div className="flex items-center gap-3">
-              <Database className="h-8 w-8 text-purple-500" />
+              <div className="p-3 bg-purple-50 rounded-lg">
+                <Database className="h-6 w-6 text-purple-600" />
+              </div>
               <div>
-                <p className="text-sm text-gray-600">Unique Fields</p>
-                <p className="text-2xl font-bold">
+                <p className="text-sm text-gray-600 font-medium">Unique Fields</p>
+                <p className="text-3xl font-bold text-gray-900">
                   {model.fields.filter((f) => f.unique).length}
                 </p>
               </div>
@@ -199,29 +210,29 @@ const ModelDetail = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex gap-4 mb-6 border-b bg-white rounded-t-lg px-6">
+        <div className="flex gap-1 mb-6 bg-white rounded-lg border-2 border-gray-200 p-1">
           <button
             onClick={() => setActiveTab("schema")}
-            className={`py-4 px-6 font-semibold border-b-2 transition-colors ${
+            className={`flex-1 py-3 px-6 font-semibold rounded-md transition-all ${
               activeTab === "schema"
-                ? "border-blue-500 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                ? "bg-blue-500 text-white shadow-sm"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <Database className="h-4 w-4" />
               Schema Structure
             </div>
           </button>
           <button
             onClick={() => setActiveTab("data")}
-            className={`py-4 px-6 font-semibold border-b-2 transition-colors ${
+            className={`flex-1 py-3 px-6 font-semibold rounded-md transition-all ${
               activeTab === "data"
-                ? "border-blue-500 text-blue-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
+                ? "bg-blue-500 text-white shadow-sm"
+                : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <TableIcon className="h-4 w-4" />
               Collection Data
             </div>
@@ -231,14 +242,14 @@ const ModelDetail = () => {
         {/* Search */}
         {activeTab === "schema" && (
           <div className="mb-6">
-            <div className="relative">
+            <div className="relative max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
                 type="text"
                 placeholder="Search fields..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white"
+                className="pl-10 bg-white border-gray-300"
               />
             </div>
           </div>
@@ -246,53 +257,53 @@ const ModelDetail = () => {
 
         {/* Schema Fields Table */}
         {activeTab === "schema" && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b bg-gray-50">
-            <h2 className="text-lg font-semibold text-gray-800">Schema Fields</h2>
+        <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+          <div className="px-6 py-4 border-b bg-gradient-to-r from-gray-50 to-white">
+            <h2 className="text-lg font-semibold text-gray-900">Schema Fields</h2>
           </div>
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="font-bold w-[250px]">Field Name</TableHead>
-                <TableHead className="font-bold">Type</TableHead>
-                <TableHead className="font-bold">Properties</TableHead>
-                <TableHead className="font-bold">Default</TableHead>
-                <TableHead className="font-bold">Enum Values</TableHead>
-                <TableHead className="font-bold">Reference</TableHead>
+              <TableRow className="bg-gray-50 border-b-2 border-gray-200">
+                <TableHead className="font-bold text-gray-900 w-[250px]">Field Name</TableHead>
+                <TableHead className="font-bold text-gray-900">Type</TableHead>
+                <TableHead className="font-bold text-gray-900">Properties</TableHead>
+                <TableHead className="font-bold text-gray-900">Default</TableHead>
+                <TableHead className="font-bold text-gray-900">Enum Values</TableHead>
+                <TableHead className="font-bold text-gray-900">Reference</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredFields && filteredFields.length > 0 ? (
                 filteredFields.map((field, index) => (
-                  <TableRow key={index} className="hover:bg-gray-50">
-                    <TableCell className="font-mono text-sm font-medium">
+                  <TableRow key={index} className="hover:bg-blue-50 transition-colors border-b border-gray-100">
+                    <TableCell className="font-mono text-sm font-semibold text-gray-900">
                       {field.name}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={getTypeColor(field.type)}>
+                      <Badge variant={getTypeColor(field.type)} className="font-medium">
                         {field.type}
                         {field.isArray && "[]"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-1.5">
                         {field.required && (
-                          <Badge variant="destructive" className="text-xs">
+                          <Badge variant="destructive" className="text-xs font-medium">
                             Required
                           </Badge>
                         )}
                         {field.unique && (
-                          <Badge variant="warning" className="text-xs">
+                          <Badge className="text-xs font-medium bg-amber-500 hover:bg-amber-600">
                             Unique
                           </Badge>
                         )}
                         {field.index && (
-                          <Badge variant="info" className="text-xs">
+                          <Badge variant="secondary" className="text-xs font-medium">
                             Indexed
                           </Badge>
                         )}
                         {field.isArray && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="outline" className="text-xs font-medium">
                             Array
                           </Badge>
                         )}
@@ -300,7 +311,7 @@ const ModelDetail = () => {
                     </TableCell>
                     <TableCell>
                       {field.default !== undefined ? (
-                        <code className="text-xs bg-gray-100 px-2 py-1 rounded">
+                        <code className="text-xs bg-blue-50 text-blue-900 px-2 py-1 rounded font-mono">
                           {typeof field.default === "object"
                             ? JSON.stringify(field.default)
                             : String(field.default)}
@@ -324,7 +335,7 @@ const ModelDetail = () => {
                     </TableCell>
                     <TableCell>
                       {field.ref ? (
-                        <Badge variant="info" className="text-xs">
+                        <Badge variant="secondary" className="text-xs font-medium">
                           → {field.ref}
                         </Badge>
                       ) : (
@@ -335,7 +346,7 @@ const ModelDetail = () => {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
+                  <TableCell colSpan={6} className="text-center py-12">
                     <p className="text-gray-500">No fields found matching "{searchTerm}"</p>
                   </TableCell>
                 </TableRow>
@@ -347,9 +358,9 @@ const ModelDetail = () => {
 
         {/* Collection Data View */}
         {activeTab === "data" && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-800">
+          <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+            <div className="px-6 py-4 border-b bg-gradient-to-r from-gray-50 to-white flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-gray-900">
                 Collection Data
                 <span className="text-sm font-normal text-gray-600 ml-3">
                   ({pagination.total} total records)
@@ -360,31 +371,32 @@ const ModelDetail = () => {
                 disabled={dataLoading}
                 variant="outline"
                 size="sm"
+                className="border-gray-300"
               >
                 {dataLoading ? "Loading..." : "Refresh"}
               </Button>
             </div>
 
             {dataLoading ? (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-20">
                 <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
                   <p className="mt-4 text-gray-600">Loading data...</p>
                 </div>
               </div>
             ) : dataRecords.length === 0 ? (
-              <div className="text-center py-12">
-                <TableIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500">No records found in this collection</p>
+              <div className="text-center py-20">
+                <TableIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-lg">No records found in this collection</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-gray-50">
+                      <TableRow className="bg-gray-50 border-b-2 border-gray-200">
                         {Object.keys(dataRecords[0] || {}).map((key) => (
-                          <TableHead key={key} className="font-bold min-w-[150px]">
+                          <TableHead key={key} className="font-bold text-gray-900 min-w-[150px]">
                             {key}
                           </TableHead>
                         ))}
@@ -392,16 +404,16 @@ const ModelDetail = () => {
                     </TableHeader>
                     <TableBody>
                       {dataRecords.map((record, index) => (
-                        <TableRow key={index} className="hover:bg-gray-50">
+                        <TableRow key={index} className="hover:bg-blue-50 transition-colors border-b border-gray-100">
                           {Object.entries(record).map(([key, value]) => (
                             <TableCell key={key} className="max-w-xs">
                               <div className="truncate" title={formatValue(value)}>
                                 {typeof value === "object" && value !== null ? (
-                                  <code className="text-xs bg-gray-100 px-2 py-1 rounded block overflow-auto max-h-20">
+                                  <code className="text-xs bg-blue-50 text-blue-900 px-2 py-1 rounded block overflow-auto max-h-20 font-mono">
                                     {formatValue(value)}
                                   </code>
                                 ) : (
-                                  <span className="text-sm">{formatValue(value)}</span>
+                                  <span className="text-sm text-gray-900">{formatValue(value)}</span>
                                 )}
                               </div>
                             </TableCell>
@@ -413,8 +425,8 @@ const ModelDetail = () => {
                 </div>
 
                 {/* Pagination Controls */}
-                <div className="px-6 py-4 border-t bg-gray-50 flex justify-between items-center">
-                  <div className="text-sm text-gray-600">
+                <div className="px-6 py-4 border-t-2 border-gray-200 bg-gray-50 flex justify-between items-center">
+                  <div className="text-sm text-gray-700 font-medium">
                     Showing {pagination.skip + 1} to{" "}
                     {Math.min(pagination.skip + pagination.limit, pagination.total)} of{" "}
                     {pagination.total} records
@@ -425,6 +437,7 @@ const ModelDetail = () => {
                       disabled={pagination.skip === 0 || dataLoading}
                       variant="outline"
                       size="sm"
+                      className="border-gray-300"
                     >
                       <ChevronLeft className="h-4 w-4 mr-1" />
                       Previous
@@ -434,6 +447,7 @@ const ModelDetail = () => {
                       disabled={!pagination.hasMore || dataLoading}
                       variant="outline"
                       size="sm"
+                      className="border-gray-300"
                     >
                       Next
                       <ChevronRight className="h-4 w-4 ml-1" />
